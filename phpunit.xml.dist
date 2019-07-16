@@ -2,8 +2,8 @@
 
 <phpunit bootstrap="vendor/autoload.php" colors="true">
     <testsuites>
-        <testsuite name="PFlorek AWS Paramstore Test Suite">
-            <directory suffix="Test.php">./tests/</directory>
+        <testsuite name="PFlorek AWS Parameter Store Test Suite">
+            <directory suffix="Test.php">./test/</directory>
         </testsuite>
     </testsuites>
 
