@@ -1,7 +1,16 @@
 {
   "name": "pflorek/aws-paramstore",
-  "description": "Fetches configuration vom AWS EC2 Paramstore",
+  "description": "Fetches configuration from AWS Parameter Store",
   "type": "library",
+  "keywords": [
+    "AWS",
+    "Cloud",
+    "Config",
+    "EC2",
+    "Parameter",
+    "Parameter Store",
+    "Systems Manager"
+  ],
   "license": "MIT",
   "authors": [
     {
@@ -20,7 +29,7 @@
     "pflorek/elevator": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": "~4.8 || ~5.7"
+    "phpunit/phpunit": ">=5.7"
   },
   "autoload": {
     "psr-4": {
