@@ -45,7 +45,10 @@ class ConfigProviderTest extends TestCase
         $client = $this->prophesize(SsmClient::class);
 
         // When
-        ConfigProvider::create($client->reveal(), $options);
+        $provider = ConfigProvider::create($client->reveal(), $options);
+
+        // Then
+        $this->assertInstanceOf(ConfigProvider::class, $provider);
     }
 
     /**
