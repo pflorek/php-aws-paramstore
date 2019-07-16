@@ -29,7 +29,7 @@
     "pflorek/elevator": "^2.0"
   },
   "require-dev": {
-    "phpunit/phpunit": ">=5.7"
+    "phpunit/phpunit": ">=5.7 || <8.0"
   },
   "autoload": {
     "psr-4": {
