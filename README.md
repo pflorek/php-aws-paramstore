@@ -53,12 +53,12 @@ $config = $provider->provide($activeProfiles);
 
 ## Configuration
 
-| parameter         | default    | result |
-| :---------------- | --------- :| - :|
-| prefix            | _none_     | The path prefix of the parameters |
-| name              | _none_     | The application name |
-| profileSeparator  | **_**      | The separator between application name and profile |
-| sharedContext     | _none_     | The shared context for application with parameters under the same path prefix |
+| parameter | required | default | description |
+| :--- | :---: | :---: | :--- |
+| prefix | _yes_ | _none_ | The path prefix of the parameters |
+| name | _yes_ | _none_ | The application name |
+| profileSeparator | _no_ | **'_'** | The separator between application name and profile |
+| sharedContext | _no_ | **''** | The shared context for application with parameters under the same path prefix |
 
 ## Example
 
