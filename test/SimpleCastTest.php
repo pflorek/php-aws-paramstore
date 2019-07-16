@@ -1,19 +1,16 @@
 <?php
 
-namespace PFlorek\AwsParamstore;
+namespace PFlorek\AwsParameterStore;
 
 use PHPUnit\Framework\TestCase;
 use stdClass;
+use TypeError;
 
-class ParserTest extends TestCase
+class SimpleCastTest extends TestCase
 {
     /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
      * @test
+     * @expectedException TypeError
      */
     public function parseValue_WithObject_ShouldReturn()
     {
@@ -21,15 +18,12 @@ class ParserTest extends TestCase
         $given = new stdClass();
 
         // When
-        $actual = $this->parser->parseValue($given);
-
-        // Then
-        $this->assertSame($given, $actual);
-        $this->assertInternalType('object', $actual);
+        SimpleCast::cast($given);
     }
 
     /**
      * @test
+     * @expectedException TypeError
      */
     public function parseValue_WithArray_ShouldReturn()
     {
@@ -37,11 +31,7 @@ class ParserTest extends TestCase
         $given = [];
 
         // When
-        $actual = $this->parser->parseValue($given);
-
-        // Then
-        $this->assertSame($given, $actual);
-        $this->assertInternalType('array', $actual);
+        SimpleCast::cast($given);
     }
 
     /**
@@ -53,7 +43,7 @@ class ParserTest extends TestCase
         $given = ' .123';
 
         // When
-        $actual = $this->parser->parseValue($given);
+        $actual = SimpleCast::cast($given);
 
         // Then
         $this->assertSame(.123, $actual);
@@ -69,7 +59,7 @@ class ParserTest extends TestCase
         $given = ' 123';
 
         // When
-        $actual = $this->parser->parseValue($given);
+        $actual = SimpleCast::cast($given);
 
         // Then
         $this->assertSame(123, $actual);
@@ -85,7 +75,7 @@ class ParserTest extends TestCase
         $given = 'no';
 
         // When
-        $actual = $this->parser->parseValue($given);
+        $actual = SimpleCast::cast($given);
 
         // Then
         $this->assertFalse($actual);
@@ -102,15 +92,10 @@ class ParserTest extends TestCase
         $given = 'foo';
 
         // When
-        $actual = $this->parser->parseValue($given);
+        $actual = SimpleCast::cast($given);
 
         // Then
         $this->assertSame($given, $actual);
         $this->assertInternalType('string', $actual);
-    }
-
-    protected function setUp()
-    {
-        $this->parser = new Parser();
     }
 }

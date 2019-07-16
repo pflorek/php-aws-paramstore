@@ -1,19 +1,16 @@
 <?php
 
-namespace PFlorek\AwsParamstore;
+namespace PFlorek\AwsParameterStore;
 
-class Parser
+
+class SimpleCast
 {
     /**
-     * @param mixed|string $value
-     * @return mixed|int|float|bool|string
+     * @param string $value
+     * @return int|float|bool|string
      */
-    public function parseValue($value)
+    public static function cast(string $value)
     {
-        if (!is_string($value)) {
-            return $value;
-        }
-
         if (is_numeric($value)) {
             return $value + 0;
         }

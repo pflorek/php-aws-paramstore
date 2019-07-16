@@ -14,6 +14,69 @@
 
 ## Usage
 
+```PHP
+use Aws\Ssm\SsmClient;
+use \PFlorek\AwsParameterStore\ConfigProvider;
+
+// Provide bootstrap options
+$options = [
+    'prefix' => '/path/with/prefix', // required
+    'name' => 'application-name', // required
+    'profileSeparator' => '_', // default => '_'
+    'sharedContext' => 'shared-context', // default => ''
+];
+
+// Configure AWS Systems Manager Client
+$client = new SsmClient([]);
+
+// Create AWS Parameter Store Config Provider
+$provider = ConfigProvider::create($client, $options);
+
+// Optionally get provided config with profiles
+$activeProfiles = ['test'];
+$config = $provider->provide($activeProfiles);
+
+//returns
+//
+//array(1) {
+//  ["service"]=>
+//  array(3) {
+//    ["host"]=>
+//    string(5) "mysql"
+//    ["port"]=>
+//    int(3306)
+//    ["enabled"]=>
+//    bool(true)
+//  }
+//}
+```
+
+## Configuration
+
+| parameter         | default    | result |
+| :---------------- | --------- :| - :|
+| prefix            | _none_     | The path prefix of the parameters |
+| name              | _none_     | The application name |
+| profileSeparator  | **_**      | The separator between application name and profile |
+| sharedContext     | _none_     | The shared context for application with parameters under the same path prefix |
+
+## Example
+
+Given options:
+
+- prefix := **/path/with/prefix**
+- name := **app-name**
+- profileSeparator := **_**
+- sharedContext = **shared**
+- profiles = **['common', 'test']**
+
+Will search for parameters with path beginning with:
+
+1. /path/with/prefix/shared
+1. /path/with/prefix/app-name
+1. /path/with/prefix/app-name_common
+1. /path/with/prefix/app-name_test
+
 ## Installation
 
 Use [Composer] to install the package:

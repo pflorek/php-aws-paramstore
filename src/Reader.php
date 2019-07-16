@@ -1,9 +1,8 @@
 <?php
 
-namespace PFlorek\AwsParamstore;
+namespace PFlorek\AwsParameterStore;
 
 use Aws\Ssm\SsmClient;
-use PFlorek\Elevator\Elevator;
 
 class Reader
 {
@@ -13,46 +12,22 @@ class Reader
     private $client;
 
     /**
-     * @var Elevator
-     */
-    private $elevator;
-
-    /**
-     * @var Options
-     */
-    private $options;
-
-    /**
-     * @var Parser
-     */
-    private $parser;
-
-    /**
      * @param SsmClient $client
-     * @param Elevator $elevator
-     * @param Options $options
      */
-    public function __construct(SsmClient $client, Elevator $elevator, Options $options)
+    public function __construct(SsmClient $client)
     {
         $this->client = $client;
-        $this->elevator = $elevator;
-        $this->options = $options;
-        $this->parser = new Parser();
     }
 
     /**
      * @see https://docs.aws.amazon.com/aws-sdk-php/v3/api/api-ssm-2014-11-06.html#getparametersbypath
+     * @param string $path
      * @return mixed[]
      */
-    public function read()
+    public function read(string $path): array
     {
-        if (!$this->options->isEnabled()) {
-            return [];
-        }
-
-        $context = $this->createContext();
         $result = $this->client->getParametersByPath([
-            'Path' => $context,
+            'Path' => $path,
             'Recursive' => true,
             'WithDecryption' => true,
         ]);
@@ -60,24 +35,12 @@ class Reader
 
         $config = [];
         foreach ($parameters as $parameter) {
-            $key = $parameter['Name'];
-            $key = str_replace(["{$context}/", '/'], ['', '.'], $key);
+            $name = $parameter['Name'];
+            $name = str_replace(["{$path}/", '/'], ['', '.'], $name);
             $value = $parameter['Value'];
-            $value = $this->parser->parseValue($value);
-            $config[$key] = $value;
+            $config[$name] = $value;
         }
 
-        return $this->elevator->up($config);
-    }
-
-    /**
-     * @return string
-     */
-    private function createContext()
-    {
-        $prefix = trim($this->options->getPrefix(), '/');
-        $name = trim($this->options->getName(), '/');
-
-        return "/{$prefix}/{$name}";
+        return $config;
     }
 }
