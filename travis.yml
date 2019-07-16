@@ -13,7 +13,6 @@ cache:
 matrix:
   include:
     - php: nightly
-    - php: 7.4
     - php: 7.3
     - php: 7.2
       env: COVERALLS_VERSION='^2.0'
