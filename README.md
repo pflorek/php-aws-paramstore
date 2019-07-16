@@ -1,4 +1,4 @@
-# PHP AWS paramstore
+# PHP AWS Parameter Store Config Provider
 
 [![Build Status](https://travis-ci.org/pflorek/php-aws-paramstore.svg?branch=master)](https://travis-ci.org/pflorek/php-aws-paramstore)
 [![Coverage Status](https://coveralls.io/repos/github/pflorek/php-aws-paramstore/badge.svg?branch=master)](https://coveralls.io/github/pflorek/php-aws-paramstore?branch=master)
