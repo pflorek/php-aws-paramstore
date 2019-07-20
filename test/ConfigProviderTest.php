@@ -2,7 +2,6 @@
 
 namespace PFlorek\AwsParameterStore;
 
-use Aws\Ssm\SsmClient;
 use PHPUnit\Framework\TestCase;
 use Prophecy\Prophecy\ObjectProphecy;
 
@@ -38,14 +37,17 @@ class ConfigProviderTest extends TestCase
     public function create_WithArrayConfig_WillReturnInstance()
     {
         // Given
+        $client = [
+            'version' => 'latest',
+            'region' => 'eu-central-1',
+        ];
         $options = [
             Options::KEY_PREFIX => '/path/prefix',
             Options::KEY_APPLICATION_NAME => 'app-name',
         ];
-        $client = $this->prophesize(SsmClient::class);
 
         // When
-        $provider = ConfigProvider::create($client->reveal(), $options);
+        $provider = ConfigProvider::create($client, $options);
 
         // Then
         $this->assertInstanceOf(ConfigProvider::class, $provider);

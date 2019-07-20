@@ -16,7 +16,7 @@
 
 ```PHP
 use Aws\Ssm\SsmClient;
-use \PFlorek\AwsParameterStore\ConfigProvider;
+use PFlorek\AwsParameterStore\ConfigProvider;
 
 // Provide bootstrap options
 $options = [
@@ -27,16 +27,24 @@ $options = [
 ];
 
 // Configure AWS Systems Manager Client
-$client = new SsmClient([]);
+$client = new SsmClient([
+    'version' => 'latest',
+    'region' => 'eu-central-1',
+]);
+// Or just pass AWS Client options to the factory method
+$client = [
+    'version' => 'latest',
+    'region' => 'eu-central-1',
+];
 
 // Create AWS Parameter Store Config Provider
 $provider = ConfigProvider::create($client, $options);
 
-// Optionally get provided config with profiles
+// Get provided config with active profiles
 $activeProfiles = ['test'];
 $config = $provider->provide($activeProfiles);
 
-//returns
+//returns for example
 //
 //array(1) {
 //  ["service"]=>

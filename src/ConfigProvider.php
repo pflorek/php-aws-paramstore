@@ -30,14 +30,20 @@ class ConfigProvider
     }
 
     /**
-     * @param SsmClient $client
-     * @param Options|array $options
+     * @param SsmClient|array $client
+     * @param Options|string[] $options
      * @return ConfigProvider
+     *
+     * @see \Aws\AwsClient::__construct
      */
-    public static function create(SsmClient $client, $options): ConfigProvider
+    public static function create($client, $options): ConfigProvider
     {
         if (!$options instanceof Options) {
             $options = Options::create($options);
+        }
+
+        if(!$client instanceof SsmClient) {
+            $client = new SsmClient($client);
         }
 
         $reader = new Reader($client);
