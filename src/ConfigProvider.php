@@ -42,7 +42,7 @@ class ConfigProvider
             $options = Options::create($options);
         }
 
-        if(!$client instanceof SsmClient) {
+        if (!$client instanceof SsmClient) {
             $client = new SsmClient($client);
         }
 
