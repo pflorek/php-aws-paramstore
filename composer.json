@@ -1,6 +1,6 @@
 {
   "name": "pflorek/aws-paramstore",
-  "description": "Fetches configuration from AWS Parameter Store",
+  "description": "Fetches configuration from AWS Parameter Store. Reads parameters by path prefix and application name. Supports multiple profiles. My use a shared context for services with same path prefix. Parses string values and simply cast them to string, integer, float or bool. Merges given contexts (shared, default, profiles) into a multidimensional configuration array.",
   "type": "library",
   "keywords": [
     "AWS",
