@@ -56,7 +56,7 @@ class ConfigProviderTest extends TestCase
     /**
      * @test
      */
-    public function read_WithOptions_WillReturnEmptyArray()
+    public function read_WithOptions_WillReturnMergedConfig()
     {
         // Given
         $prefix = 'prefix';
@@ -114,6 +114,69 @@ class ConfigProviderTest extends TestCase
                 'profile' => $parameterFromProfileContext,
                 'app' => $parameterFromAppContext,
                 'context' => $parameterFromSharedContext,
+            ],
+        ];
+        $this->assertSame($expected, $config);
+    }
+
+    /**
+     * @test
+     */
+    public function read_WithProfiles_WillMergeThemInOrder()
+    {
+        // Given
+        $prefix = 'prefix';
+        $name = 'app-name';
+        $separator = '+';
+        $firstProfile = 'shared';
+        $lastProfile = 'test';
+
+        $this->options->getPrefix()
+            ->shouldBeCalled()
+            ->willReturn($prefix);
+
+        $this->options->getApplicationName()
+            ->shouldBeCalled()
+            ->willReturn($name);
+
+        $this->options->getProfileSeparator()
+            ->shouldBeCalled()
+            ->willReturn($separator);
+
+        $this->options->getSharedContext()
+            ->shouldBeCalled()
+            ->willReturn('');
+
+        $parameterFromProfile1Context = 'value from first profile should be overridden';
+        $this->reader->read("/{$prefix}/{$name}{$separator}{$firstProfile}")
+            ->shouldBeCalled()
+            ->willReturn([
+                'test.profile' => $parameterFromProfile1Context,
+            ]);
+
+        $parameterFromProfile2Context = 'value from last profile should win';
+        $this->reader->read("/{$prefix}/{$name}{$separator}{$lastProfile}")
+            ->shouldBeCalled()
+            ->willReturn([
+                'test.profile' => $parameterFromProfile2Context,
+            ]);
+
+        $parameterFromAppContext = 'value from app context';
+        $this->reader->read("/{$prefix}/{$name}")
+            ->shouldBeCalled()
+            ->willReturn([
+                'test.app' => $parameterFromAppContext,
+                'test.profile' => $parameterFromAppContext,
+            ]);
+
+        // When
+        $config = $this->provider->provide([$firstProfile, $lastProfile]);
+
+        // Then
+        $expected = [
+            'test' => [
+                'profile' => $parameterFromProfile2Context,
+                'app' => $parameterFromAppContext,
             ],
         ];
         $this->assertSame($expected, $config);
