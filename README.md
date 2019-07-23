@@ -11,6 +11,7 @@
 [![Daily Downloads](https://poser.pugx.org/pflorek/aws-paramstore/d/daily)](https://packagist.org/packages/pflorek/aws-paramstore)
 [![composer.lock](https://poser.pugx.org/pflorek/aws-paramstore/composerlock)](https://packagist.org/packages/pflorek/aws-paramstore)
 
+Fetches configuration from AWS Parameter Store. Reads parameters by path prefix and application name. Supports multiple profiles. My use a shared context for services with same path prefix. Parses string values and simply cast them to string, integer, float or bool. Merges given contexts (shared, default, profiles) into a multidimensional configuration array.
 
 ## Usage
 
