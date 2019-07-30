@@ -70,4 +70,39 @@ class ReaderTest extends TestCase
         // Then
         $this->assertSame(['foo.bar' => $value], $config);
     }
+
+    /**
+     * @test
+     */
+    public function read_WithNextToken_WillReturnArray()
+    {
+        // Given
+
+        $path = '/context/path/with/prefix/and/app_profile';
+        $key = 'foo.bar';
+        $value = 'baz';
+
+        $first = [
+            'Parameters' => [[
+                'Name' => "$path/{$key}",
+                'Value' => $value,
+            ]],
+            'NextToken' => 'some token',
+        ];
+        $second = [
+            'Parameters' => [[
+                'Name' => "$path/{$key}",
+                'Value' => $value,
+            ]],
+        ];
+        $this->client->getParametersByPath(Argument::withEntry('Path', $path))
+            ->willReturn($first, $second);
+
+        // When
+        $config = $this->reader->read($path);
+
+        // Then
+        $this->assertSame(['foo.bar' => $value], $config);
+        $this->client->getParametersByPath(Argument::any())->shouldHaveBeenCalledTimes(2);
+    }
 }
