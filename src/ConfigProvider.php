@@ -20,10 +20,16 @@ class ConfigProvider
     private $reader;
 
     /**
-     * @param array|SsmClient|Reader $client
-     * @param Options|string[] $options
+     * @var string[]
      */
-    public function __construct($client, $options)
+    private $profiles;
+
+    /**
+     * @param array|SsmClient|Reader $client
+     * @param string[]|Options $options
+     * @param null|string|string[] $profiles
+     */
+    public function __construct($client, $options, $profiles = [])
     {
         if (is_array($options)) {
             $options = Options::create($options);
@@ -34,18 +40,16 @@ class ConfigProvider
             $client = new Reader($client);
         }
         $this->reader = $client;
+
+        $this->profiles = (array)$profiles;
     }
 
     /**
-     * @param string|string[] $profile
      * @return string[]|int[]|float[]|bool[]
      */
-    public function __invoke($profile = []): array
+    public function __invoke(): array
     {
-        if (!is_array($profile)) {
-            $profile = (array)$profile;
-        }
-        $paths = $this->createPaths($profile);
+        $paths = $this->createPaths($this->profiles);
         $paths = array_reverse($paths);
 
         $config = [];

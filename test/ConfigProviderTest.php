@@ -18,17 +18,19 @@ class ConfigProviderTest extends TestCase
      */
     private $reader;
 
-    /**
-     * @var ConfigProvider
-     */
-    private $provider;
-
     protected function setUp()
     {
         $this->options = $this->prophesize(Options::class);
         $this->reader = $this->prophesize(Reader::class);
+    }
 
-        $this->provider = new ConfigProvider($this->reader->reveal(), $this->options->reveal());
+    /**
+     * @param null|string|array $profiles
+     * @return ConfigProvider
+     */
+    private function getSut($profiles): ConfigProvider
+    {
+        return new ConfigProvider($this->reader->reveal(), $this->options->reveal(), $profiles);
     }
 
     /**
@@ -106,7 +108,8 @@ class ConfigProviderTest extends TestCase
             ]);
 
         // When
-        $config = $this->provider->__invoke($profile);
+        $provider = $this->getSut($profile);
+        $config = $provider();
 
         // Then
         $expected = [
@@ -170,7 +173,8 @@ class ConfigProviderTest extends TestCase
             ]);
 
         // When
-        $config = $this->provider->__invoke([$firstProfile, $lastProfile]);
+        $provider = $this->getSut([$firstProfile, $lastProfile]);
+        $config = $provider();
 
         // Then
         $expected = [
