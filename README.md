@@ -38,12 +38,12 @@ $client = [
     'region' => 'eu-central-1',
 ];
 
-// Create AWS Parameter Store Config Provider
-$provider = new ConfigProvider($client, $options);
-
 // Get provided config with active profiles
 $environments = ['test'];
-$config = $provider($environments);
+
+// Create AWS Parameter Store Config Provider
+$provider = new ConfigProvider($client, $options, $environments);
+$config = $provider();
 
 // e.g. returns
 //
