@@ -20,49 +20,37 @@ class ConfigProvider
     private $reader;
 
     /**
-     * @param Reader $reader
-     * @param Options $options
-     */
-    public function __construct(Reader $reader, Options $options)
-    {
-        $this->options = $options;
-        $this->reader = $reader;
-    }
-
-    /**
-     * @param SsmClient|array $client
+     * @param array|SsmClient|Reader $client
      * @param Options|string[] $options
-     * @return ConfigProvider
-     *
-     * @see \Aws\AwsClient::__construct
      */
-    public static function create($client, $options): ConfigProvider
+    public function __construct($client, $options)
     {
-        if (!$options instanceof Options) {
+        if (is_array($options)) {
             $options = Options::create($options);
         }
+        $this->options = $options;
 
-        if (!$client instanceof SsmClient) {
-            $client = new SsmClient($client);
+        if(!$client instanceof Reader) {
+            $client = new Reader($client);
         }
-
-        $reader = new Reader($client);
-
-        return new ConfigProvider($reader, $options);
+        $this->reader = $client;
     }
 
     /**
-     * @param string[] $profiles
+     * @param string|string[] $profile
      * @return string[]|int[]|float[]|bool[]
      */
-    public function provide(array $profiles = []): array
+    public function __invoke($profile = []): array
     {
-        $paths = $this->createPaths($profiles);
+        if (!is_array($profile)) {
+            $profile = (array)$profile;
+        }
+        $paths = $this->createPaths($profile);
         $paths = array_reverse($paths);
 
         $config = [];
         foreach ($paths as $context) {
-            $config += $this->reader->read($context);
+            $config += $this->reader->fromPath($context);
         }
 
         $config = array_map([SimpleCast::class, 'cast'], $config);

@@ -11,7 +11,7 @@
 [![Daily Downloads](https://poser.pugx.org/pflorek/aws-paramstore/d/daily)](https://packagist.org/packages/pflorek/aws-paramstore)
 [![composer.lock](https://poser.pugx.org/pflorek/aws-paramstore/composerlock)](https://packagist.org/packages/pflorek/aws-paramstore)
 
-Fetches configuration from AWS Parameter Store. Reads parameters by path prefix and application name. Supports multiple profiles. My use a shared context for services with same path prefix. Parses string values and simply cast them to string, integer, float or bool. Merges given contexts (shared, default, profiles) into a multidimensional configuration array.
+This library reads parameters from AWS Parameter Store. It supports a path prefix, an optional shared context and multiple profiles. Returns an multi dimensional array of string|int|float|bool. Integrates directly with zendframework/zend-config-aggregator.
 
 ## Usage
 
@@ -32,20 +32,20 @@ $client = new SsmClient([
     'version' => 'latest',
     'region' => 'eu-central-1',
 ]);
-// Or just pass AWS Client options to the factory method
+// Or just pass AWS Client options
 $client = [
     'version' => 'latest',
     'region' => 'eu-central-1',
 ];
 
 // Create AWS Parameter Store Config Provider
-$provider = ConfigProvider::create($client, $options);
+$provider = new ConfigProvider($client, $options);
 
 // Get provided config with active profiles
-$activeProfiles = ['test'];
-$config = $provider->provide($activeProfiles);
+$environments = ['test'];
+$config = $provider($environments);
 
-//returns for example
+// e.g. returns
 //
 //array(1) {
 //  ["service"]=>

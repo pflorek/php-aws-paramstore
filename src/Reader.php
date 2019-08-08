@@ -14,10 +14,14 @@ class Reader
     private $client;
 
     /**
-     * @param SsmClient $client
+     * @param SsmClient|array $client
      */
-    public function __construct(SsmClient $client)
+    public function __construct($client)
     {
+        if (is_array($client)) {
+            $client = new SsmClient($client);
+        }
+
         $this->client = $client;
     }
 
@@ -26,7 +30,7 @@ class Reader
      * @param string $path
      * @return mixed[]
      */
-    public function read(string $path): array
+    public function fromPath(string $path): array
     {
         $config = [];
         foreach ($this->getParameters($path) as $parameter) {

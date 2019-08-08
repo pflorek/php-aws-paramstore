@@ -29,7 +29,7 @@ class ReaderTest extends TestCase
     /**
      * @test
      */
-    public function read_WithAnyContext_WillReturnEmptyArray()
+    public function readFromPath_WithAnyContext_WillReturnEmptyArray()
     {
         // Given
         $path = 'any';
@@ -38,7 +38,7 @@ class ReaderTest extends TestCase
             ->willReturn(['Parameters' => []]);
 
         // When
-        $config = $this->reader->read($path);
+        $config = $this->reader->fromPath($path);
 
         // Then
         $this->assertInternalType('array', $config);
@@ -47,7 +47,7 @@ class ReaderTest extends TestCase
     /**
      * @test
      */
-    public function read_WithExistingParam_WillReturnArray()
+    public function readFromPath_WithExistingParam_WillReturnArray()
     {
         // Given
 
@@ -65,7 +65,7 @@ class ReaderTest extends TestCase
             ]]);
 
         // When
-        $config = $this->reader->read($path);
+        $config = $this->reader->fromPath($path);
 
         // Then
         $this->assertSame(['foo.bar' => $value], $config);
@@ -74,7 +74,7 @@ class ReaderTest extends TestCase
     /**
      * @test
      */
-    public function read_WithNextToken_WillReturnArray()
+    public function readFromPath_WithNextToken_WillReturnArray()
     {
         // Given
 
@@ -99,7 +99,7 @@ class ReaderTest extends TestCase
             ->willReturn($first, $second);
 
         // When
-        $config = $this->reader->read($path);
+        $config = $this->reader->fromPath($path);
 
         // Then
         $this->assertSame(['foo.bar' => $value], $config);

@@ -1,6 +1,6 @@
 {
   "name": "pflorek/aws-paramstore",
-  "description": "Fetches configuration from AWS Parameter Store. Reads parameters by path prefix and application name. Supports multiple profiles. My use a shared context for services with same path prefix. Parses string values and simply cast them to string, integer, float or bool. Merges given contexts (shared, default, profiles) into a multidimensional configuration array.",
+  "description": "This library reads parameters from AWS Parameter Store. It supports a path prefix, an optional shared context and multiple profiles. Returns an multi dimensional array of string|int|float|bool. Integrates directly with zendframework/zend-config-aggregator.",
   "type": "library",
   "keywords": [
     "AWS",
@@ -30,6 +30,9 @@
   },
   "require-dev": {
     "phpunit/phpunit": ">=5.7 <8.0"
+  },
+  "suggest": {
+    "zendframework/zend-config-aggregator": "Use directly as AWS Parameter Store Config Provider."
   },
   "autoload": {
     "psr-4": {

@@ -47,7 +47,7 @@ class ConfigProviderTest extends TestCase
         ];
 
         // When
-        $provider = ConfigProvider::create($client, $options);
+        $provider = new ConfigProvider($client, $options);
 
         // Then
         $this->assertInstanceOf(ConfigProvider::class, $provider);
@@ -82,14 +82,14 @@ class ConfigProviderTest extends TestCase
             ->willReturn($sharedContext);
 
         $parameterFromProfileContext = 'value from profile';
-        $this->reader->read("/{$prefix}/{$name}{$separator}{$profile}")
+        $this->reader->fromPath("/{$prefix}/{$name}{$separator}{$profile}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.profile' => $parameterFromProfileContext,
             ]);
 
         $parameterFromAppContext = 'value from app context';
-        $this->reader->read("/{$prefix}/{$name}")
+        $this->reader->fromPath("/{$prefix}/{$name}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.app' => $parameterFromAppContext,
@@ -97,7 +97,7 @@ class ConfigProviderTest extends TestCase
             ]);
 
         $parameterFromSharedContext = 'value from shared context';
-        $this->reader->read("/{$prefix}/{$sharedContext}")
+        $this->reader->fromPath("/{$prefix}/{$sharedContext}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.app' => $parameterFromSharedContext,
@@ -106,7 +106,7 @@ class ConfigProviderTest extends TestCase
             ]);
 
         // When
-        $config = $this->provider->provide([$profile]);
+        $config = $this->provider->__invoke($profile);
 
         // Then
         $expected = [
@@ -148,21 +148,21 @@ class ConfigProviderTest extends TestCase
             ->willReturn('');
 
         $parameterFromProfile1Context = 'value from first profile should be overridden';
-        $this->reader->read("/{$prefix}/{$name}{$separator}{$firstProfile}")
+        $this->reader->fromPath("/{$prefix}/{$name}{$separator}{$firstProfile}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.profile' => $parameterFromProfile1Context,
             ]);
 
         $parameterFromProfile2Context = 'value from last profile should win';
-        $this->reader->read("/{$prefix}/{$name}{$separator}{$lastProfile}")
+        $this->reader->fromPath("/{$prefix}/{$name}{$separator}{$lastProfile}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.profile' => $parameterFromProfile2Context,
             ]);
 
         $parameterFromAppContext = 'value from app context';
-        $this->reader->read("/{$prefix}/{$name}")
+        $this->reader->fromPath("/{$prefix}/{$name}")
             ->shouldBeCalled()
             ->willReturn([
                 'test.app' => $parameterFromAppContext,
@@ -170,7 +170,7 @@ class ConfigProviderTest extends TestCase
             ]);
 
         // When
-        $config = $this->provider->provide([$firstProfile, $lastProfile]);
+        $config = $this->provider->__invoke([$firstProfile, $lastProfile]);
 
         // Then
         $expected = [
